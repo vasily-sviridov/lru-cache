@@ -1,3 +1,6 @@
 [submodule "tests/third_party/random"]
 	path = tests/third_party/random
 	url = git@github.com:effolkronium/random.git
+[submodule "third_party/intrusive"]
+	path = third_party/intrusive
+	url = git@github.com:boostorg/intrusive.git
