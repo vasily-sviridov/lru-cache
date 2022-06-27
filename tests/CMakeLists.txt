@@ -1,10 +1,4 @@
-cmake_minimum_required(VERSION 3.16)
-
-project(tests)
-
-add_executable(${PROJECT_NAME} lru-cache_tests.cpp)
-
-set(CMAKE_CXX_STANDARD 17)
+find_package(Threads REQUIRED)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -15,7 +9,14 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-target_include_directories(${PROJECT_NAME} PRIVATE ../include)
+#target_include_directories(${PROJECT_NAME}_tests PRIVATE ../include)
 add_subdirectory(third_party/random)
 
-target_link_libraries(${PROJECT_NAME} PUBLIC effolkronium_random gtest gtest_main)
+add_executable(${PROJECT_NAME}_tests lru-cache_tests.cpp)
+
+target_include_directories(${PROJECT_NAME}_tests PRIVATE ../include)
+
+target_link_libraries(${PROJECT_NAME}_tests PUBLIC effolkronium_random gtest_main)
+
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME}_tests cache::lru-cache)
