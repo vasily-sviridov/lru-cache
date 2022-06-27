@@ -11,6 +11,9 @@
 #
 name: "CodeQL"
 
+env:
+  BUILD_TYPE: Release
+
 on:
   push:
     branches: [ "master" ]
