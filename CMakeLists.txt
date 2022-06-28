@@ -20,8 +20,13 @@ write_basic_package_version_file("${PROJECT_BINARY_DIR}/LruCacheConfigVersion.cm
 
 install(FILES "${PROJECT_BINARY_DIR}/LruCacheConfigVersion.cmake" DESTINATION share/LruCache/cmake)
 
-add_subdirectory(third_party/intrusive)
+if (DEBUG)
+    if (SANITIZERS)
+        set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -fno-omit-frame-pointer -fsanitize=address,undefined")
+    endif ()
 
-
-enable_testing()
-add_subdirectory(tests)
+    if (TESTING)
+        enable_testing()
+        add_subdirectory(tests)
+    endif ()
+endif ()
