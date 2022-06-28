@@ -33,6 +33,17 @@ jobs:
             os: ubuntu-20.04
             info: g++-9 + debug + sanitizers
 
+          - cmake-flags: >-
+              -DCMAKE_CXX_COMPILER=g++-9 -DCMAKE_C_COMPILER=gcc-9
+              -DCMAKE_BUILD_TYPE=Release
+            os: ubuntu-20.04
+            info: g++-9 + release
+
+          - cmake-flags: >-
+              -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_C_COMPILER=gcc-8
+            os: ubuntu-18.04
+            info: g++-8 + release
+
     name: '${{matrix.os}}: ${{matrix.info}}'
     runs-on: ${{matrix.os}}
 
