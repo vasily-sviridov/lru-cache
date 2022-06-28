@@ -18,15 +18,22 @@ jobs:
           - cmake-flags: >-
               -DCMAKE_CXX_COMPILER=clang++-14 -DCMAKE_C_COMPILER=clang-14
               -DCMAKE_BUILD_TYPE=Debug
+              -DDEBUG=1
+              -DTESTING=1
+              -DSANITIZERS=1
             os: ubuntu-22.04
-            info: clang-14 + debug
+            info: clang-14 + debug + sanitizers
 
           - cmake-flags: >-
               -DCMAKE_CXX_COMPILER=g++-9 -DCMAKE_C_COMPILER=gcc-9 
               -DCMAKE_BUILD_TYPE=Debug
+              -DDEBUG=1
+              -DTESTING=1
+              -DSANITIZERS=1
             os: ubuntu-20.04
-            info: g++-9 + debug
+            info: g++-9 + debug + sanitizers
 
+    name: '${{matrix-os}}: ${{matrix.info}}'
     runs-on: ${{matrix.os}}
 
     steps:
@@ -44,5 +51,5 @@ jobs:
 
     - name: Test
       working-directory: ${{github.workspace}}/build
-      run: ctest -C ${{env.BUILD_TYPE}}
+      run: ctest -V
 
