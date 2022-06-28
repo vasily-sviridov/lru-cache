@@ -40,7 +40,7 @@ jobs:
             info: g++-9 + release
 
           - cmake-flags: >-
-              -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_C_COMPILER=gcc-8
+              -DCMAKE_BUILD_TYPE=Release
             os: ubuntu-18.04
             info: g++-8 + release
 
