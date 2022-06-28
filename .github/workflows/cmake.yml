@@ -2,57 +2,47 @@ name: CMake
 
 on:
   push:
-    branches: ["master"]
+    branches: [ "master" ]
   pull_request:
-    branches: ["master"]
+    branches: [ "master" ]
 
 env:
-  # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
   BUILD_TYPE: Release
 
 jobs:
   posix:
-        strategy:
-            fail-fast: false
-            matrix:
-                include:
-                  - cmake-flags: >-
-                        -DCMAKE_CXX_COMPILER=clang++-14 -DCMAKE_C_COMPILER=clang-14
-                        -DCMAKE_BUILD_TYPE=Debug
-                    os: ubuntu-22.04
-                    info: clang-14 + debug + sanitize addr+ub
-                    tests-flags: ''
-                  - cmake-flags: >-
-                    os: ubuntu-20.04
-                    info: g++-9 + debug + sanitize addr+ub
-                  - cmake-flags: >-
-                    os: ubuntu-20.04
-                    info: g++-9 + release
-                  - cmake-flags: >-
-                        -DCMAKE_CXX_COMPILER=g++-8 -DCMAKE_C_COMPILER=gcc-8
-                    os: ubuntu-18.04
-                    info: g++-8 + release
-        name: '${{matrix.os}}: ${{matrix.info}}'
-        runs-on: ${{matrix.os}}
+    strategy:
+      fail-fast: false
+      matrix: 
+        include:
+          - cmake-flags: >-
+              -DCMAKE_CXX_COMPILER=clang++-14 -DCMAKE_C_COMPILER=clang-14
+              -DCMAKE_BUILD_TYPE=Debug
+            os: ubuntu-22.04
+            info: clang-14 + debug
+
+          - cmake-flags: >-
+              -DCMAKE_CXX_COMPILER=g++-9 -DCMAKE_C_COMPILER=gcc-9 
+              -DCMAKE_BUILD_TYPE=Debug
+            os: ubuntu-20.04
+            info: g++-9 + debug
+
+    runs-on: ${{matrix.os}}
 
     steps:
-      - uses: actions/checkout@v3
-        with:
-          submodules: recursive
+    - uses: actions/checkout@v3
+      with:
+        submodules: recursive
 
-      - name: Configure CMake
-        # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
-        # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-        run: |
-          sudo apt install libboost-all-dev
-          cmake -B ${{github.workspace}}/build ${{matrix.cmake-flags}}
+    - name: Configure CMake
+      run: |
+        sudo apt install libboost-all-dev
+        cmake -B ${{github.workspace}}/build ${{matrix.cmake-flags}}
 
-      - name: Build
-        # Build your program with the given configuration
-        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+    - name: Build
+      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
-      - name: Test
-        working-directory: ${{github.workspace}}/build
-        # Execute tests defined by the CMake configuration.
-        # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
-        run: ctest -V
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{env.BUILD_TYPE}}
+
